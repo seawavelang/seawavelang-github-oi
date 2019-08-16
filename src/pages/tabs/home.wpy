@@ -8,6 +8,18 @@
         </navigator>
       </swiper-item>
     </swiper>
+
+    <!-- 分类区域 -->
+    <!-- block只起到包裹作用，for 循环时用到-->
+    <!-- 图片路径前面一定要加/ -->
+    <view class="cate">
+      <block wx:for="{{cateData}}" wx:key="index">
+        <navigator url="/pages/tabs/cate" open-type="{{item.open_type}}" wx:if="{{item.navigator_url !== undefined}}">
+          <image src="{{item.image_src}}" />
+        </navigator>
+        <image src="{{item.image_src}}" wx:else />
+      </block>
+    </view>
   </view>
 </template>
 
@@ -16,12 +28,16 @@
 
   export default class extends wepy.page {
     data = {
-      swiperList: []
+      // 轮播图列表数据
+      swiperList: [],
+      // 分类相关数据
+      cateData: []
     }
 
     // 触发了这个生命周期函数，调用的函数
     onLoad() {
       this.getSwiperData()
+      this.getCateData()
     }
 
     // 获取轮播图数据的函数
@@ -31,9 +47,9 @@
         method: 'GET',
         data: {}
       })
-      console.log(res)
+      // console.log(res)
       if (res.meta.status !== 200) {
-        return wx.showToast({
+        return wepy.showToast({
           title: '获取数据失败',
           // 弹框期间不会携带任何图标
           icon: 'none',
@@ -43,6 +59,25 @@
 
       this.swiperList = res.message
       // 异步函数一定要调用$apply()
+      this.$apply()
+    }
+
+    // 获取首页分类相关数据
+    async getCateData() {
+      const {data: res} = await wepy.request({
+        url: 'https://www.zhengzhicheng.cn/api/public/v1/home/catitems',
+        method: 'GET'
+      })
+      console.log(res)
+      if (res.meta.status !== 200) {
+        return wepy.showToast({
+          title: '获取数据失败',
+          // 弹框期间不会携带任何图标
+          icon: 'none',
+          duration: 1500
+        })
+      }
+      this.cateData = res.message
       this.$apply()
     }
   }
@@ -55,6 +90,16 @@
     image {
       height: 100%;
       width: 750rpx;
+    }
+  }
+
+  .cate {
+    display: flex;
+    justify-content: space-around;
+    margin: 40rpx 0;
+    image {
+      width: 120rpx;
+      height: 120rpx;
     }
   }
 </style>
