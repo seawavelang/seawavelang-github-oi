@@ -20,66 +20,28 @@
         <image src="{{item.image_src}}" wx:else />
       </block>
     </view>
+
+    <!-- 楼层区域 -->
+    <view class="floor">
+      <view class="floor_item" wx:for="{{floorData}}" wx:key="index">
+        <image class="floor_item_title" src="{{item.floor_title.image_src}}" />
+        <!-- 图片 -->
+        <view class="floor_item_box">
+          <image class="floor_item_pic" wx:for="{{item.product_list}}" wx:key="index" src="{{item.image_src}}" style="width: {{item.image_width}}rpx;" @tap="goGoodsList({{item.navigator_url}})" />
+        </view>
+      </view>     
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  // @代表src这一层路径
+  import mix from '@/mixins/tabs/home.js'
 
   export default class extends wepy.page {
-    data = {
-      // 轮播图列表数据
-      swiperList: [],
-      // 分类相关数据
-      cateData: []
-    }
-
-    // 触发了这个生命周期函数，调用的函数
-    onLoad() {
-      this.getSwiperData()
-      this.getCateData()
-    }
-
-    // 获取轮播图数据的函数
-    async getSwiperData() {
-      const {data: res} = await wepy.request({
-        url: 'https://www.zhengzhicheng.cn/api/public/v1/home/swiperdata',
-        method: 'GET',
-        data: {}
-      })
-      // console.log(res)
-      if (res.meta.status !== 200) {
-        return wepy.showToast({
-          title: '获取数据失败',
-          // 弹框期间不会携带任何图标
-          icon: 'none',
-          duration: 1500
-        })
-      }
-
-      this.swiperList = res.message
-      // 异步函数一定要调用$apply()
-      this.$apply()
-    }
-
-    // 获取首页分类相关数据
-    async getCateData() {
-      const {data: res} = await wepy.request({
-        url: 'https://www.zhengzhicheng.cn/api/public/v1/home/catitems',
-        method: 'GET'
-      })
-      console.log(res)
-      if (res.meta.status !== 200) {
-        return wepy.showToast({
-          title: '获取数据失败',
-          // 弹框期间不会携带任何图标
-          icon: 'none',
-          duration: 1500
-        })
-      }
-      this.cateData = res.message
-      this.$apply()
-    }
+    // 把导入的mix对象，挂载到mixins这个数组中就行
+    mixins = [mix]
   }
 </script>
 
@@ -100,6 +62,27 @@
     image {
       width: 120rpx;
       height: 120rpx;
+    }
+  }
+
+  .floor {
+    .floor_item {
+      .floor_item_title {
+        width: 700rpx;
+        height: 50rpx;
+        display: block;
+      }
+      .floor_item_box {
+        .floor_item_pic {
+          float: left;
+          height: 200rpx;
+          margin: 8rpx;
+          margin-top: 0;
+          &:nth-child(1) {
+            height: 408rpx;
+          }
+        }
+      }
     }
   }
 </style>

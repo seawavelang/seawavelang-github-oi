@@ -12,6 +12,7 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
+import '@/baseAPI.js'
 
 export default class extends wepy.app {
   config = {
@@ -21,7 +22,10 @@ export default class extends wepy.app {
       'pages/tabs/search',
       'pages/tabs/cart',
       'pages/tabs/me',
-      'pages/goods_detail/main'
+      // 商品详情页面
+      'pages/goods_detail/main',
+      // 商品列表页面
+      'pages/goods_list'
     ],
     window: {
       backgroundTextStyle: 'dark',
