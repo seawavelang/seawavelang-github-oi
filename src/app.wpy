@@ -20,7 +20,8 @@ export default class extends wepy.app {
       'pages/tabs/cate',
       'pages/tabs/search',
       'pages/tabs/cart',
-      'pages/tabs/me'
+      'pages/tabs/me',
+      'pages/goods_detail/main'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -65,6 +66,8 @@ export default class extends wepy.app {
   constructor () {
     super()
     this.use('requestfix')
+    // 通过这一行代码，可以为一步的api 开启promise功能，返回值是promise对象，可以用async await
+    this.use('promisify')
   }
 
   onLaunch() {
